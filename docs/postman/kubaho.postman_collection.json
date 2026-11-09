@@ -1,0 +1,130 @@
+{
+  "info": {
+    "name": "Kubaho API",
+    "description": "Camera-free WiFi-sensing fall and wellness monitoring. Start with 'Seed demo data', then 'Sample CSI window' (its test script stores the window) and 'Predict'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8000"},
+    {"key": "householdId", "value": "HH-001"},
+    {"key": "alertId", "value": "1"}
+  ],
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {"name": "Health", "request": {"method": "GET", "url": "{{baseUrl}}/health"}},
+        {"name": "Model card", "request": {"method": "GET", "url": "{{baseUrl}}/model"}}
+      ]
+    },
+    {
+      "name": "Demo",
+      "item": [
+        {"name": "Seed demo data", "request": {"method": "POST", "url": {"raw": "{{baseUrl}}/demo/seed?reset=true", "host": ["{{baseUrl}}"], "path": ["demo", "seed"], "query": [{"key": "reset", "value": "true"}]}}},
+        {
+          "name": "Sample CSI window (fall)",
+          "event": [{"listen": "test", "script": {"exec": ["pm.collectionVariables.set('window', JSON.stringify(pm.response.json().csi_amplitude));"]}}],
+          "request": {"method": "GET", "url": {"raw": "{{baseUrl}}/demo/sample-window?activity=fall_forward", "host": ["{{baseUrl}}"], "path": ["demo", "sample-window"], "query": [{"key": "activity", "value": "fall_forward"}]}}
+        }
+      ]
+    },
+    {
+      "name": "Inference",
+      "item": [
+        {
+          "name": "Predict",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"fs\": 100, \"csi_amplitude\": {{window}}}"},
+            "url": "{{baseUrl}}/predict"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ingest",
+      "item": [
+        {
+          "name": "Fall event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"event_id\": \"{{$guid}}\", \"node_id\": \"node-hh002-a\", \"type\": \"fall\", \"confidence\": 0.94}"},
+            "url": "{{baseUrl}}/events"
+          }
+        },
+        {
+          "name": "Motion summary",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"event_id\": \"{{$guid}}\", \"node_id\": \"node-hh001-a\", \"type\": \"motion_summary\", \"energy\": 0.42}"},
+            "url": "{{baseUrl}}/events"
+          }
+        },
+        {
+          "name": "Bathroom enter (35 min ago)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"event_id\": \"{{$guid}}\", \"node_id\": \"node-hh001-b\", \"type\": \"bathroom_enter\", \"ts\": \"2026-11-09T18:00:00Z\"}"},
+            "url": "{{baseUrl}}/events"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Households",
+      "item": [
+        {"name": "List households", "request": {"method": "GET", "url": "{{baseUrl}}/households"}},
+        {"name": "Get household", "request": {"method": "GET", "url": "{{baseUrl}}/households/{{householdId}}"}},
+        {
+          "name": "Create household",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"id\": \"HH-004\",\n  \"name\": \"Uwimana household\",\n  \"cell\": \"Nkuzuzu\",\n  \"village\": \"Nkuzuzu\",\n  \"people\": [\n    {\"role\": \"elder\", \"name\": \"Marie Uwimana\"},\n    {\"role\": \"caregiver\", \"name\": \"Eric Habineza\", \"phone\": \"+250788000401\", \"language\": \"rw\"},\n    {\"role\": \"chw\", \"name\": \"Odette Mukeshimana\", \"phone\": \"+250788000190\", \"language\": \"rw\"}\n  ],\n  \"nodes\": [{\"id\": \"node-hh004-a\", \"zone\": \"living_room\"}]\n}"},
+            "url": "{{baseUrl}}/households"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {"name": "Household alerts", "request": {"method": "GET", "url": "{{baseUrl}}/households/{{householdId}}/alerts"}},
+        {
+          "name": "Acknowledge alert",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"outcome\": \"false_alarm\", \"by\": \"Postman\"}"},
+            "url": "{{baseUrl}}/alerts/{{alertId}}/ack"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wellness",
+      "item": [
+        {"name": "Restlessness (14 nights)", "request": {"method": "GET", "url": {"raw": "{{baseUrl}}/households/HH-002/restlessness?nights=14", "host": ["{{baseUrl}}"], "path": ["households", "HH-002", "restlessness"], "query": [{"key": "nights", "value": "14"}]}}},
+        {"name": "Bathroom (7 days)", "request": {"method": "GET", "url": {"raw": "{{baseUrl}}/households/{{householdId}}/bathroom?days=7", "host": ["{{baseUrl}}"], "path": ["households", "{{householdId}}", "bathroom"], "query": [{"key": "days", "value": "7"}]}}}
+      ]
+    },
+    {
+      "name": "SMS",
+      "item": [
+        {"name": "SMS log", "request": {"method": "GET", "url": "{{baseUrl}}/households/{{householdId}}/sms"}},
+        {
+          "name": "Incoming SMS reply (Africa's Talking callback)",
+          "request": {
+            "method": "POST",
+            "body": {"mode": "urlencoded", "urlencoded": [{"key": "from", "value": "+250788000101"}, {"key": "text", "value": "1"}]},
+            "url": "{{baseUrl}}/sms/incoming"
+          }
+        }
+      ]
+    }
+  ]
+}

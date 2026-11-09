@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" font-family="Segoe UI, system-ui, sans-serif" font-size="13">
+  <rect width="860" height="380" fill="#fcfcfb" rx="10"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0b0b0b">Kubaho sensing node: wiring (per home)</text>
+  <text x="24" y="56" fill="#52514e">No soldering. Power over USB-C through a pass-through power bank, so the node rides through power cuts.</text>
+
+  <!-- mains charger -->
+  <rect x="24" y="150" width="130" height="70" rx="8" fill="#f0efec" stroke="#c3c2b7"/>
+  <text x="89" y="180" text-anchor="middle" font-weight="600" fill="#0b0b0b">Mains charger</text>
+  <text x="89" y="200" text-anchor="middle" fill="#52514e">5 V / 1 A USB</text>
+
+  <!-- power bank -->
+  <rect x="214" y="150" width="140" height="70" rx="8" fill="#f0efec" stroke="#c3c2b7"/>
+  <text x="284" y="180" text-anchor="middle" font-weight="600" fill="#0b0b0b">Power bank</text>
+  <text x="284" y="200" text-anchor="middle" fill="#52514e">10,000 mAh, pass-through</text>
+
+  <!-- ESP32 board -->
+  <rect x="424" y="120" width="210" height="130" rx="8" fill="#cde2fb" stroke="#2a78d6" stroke-width="1.5"/>
+  <text x="529" y="150" text-anchor="middle" font-weight="700" fill="#0d366b">ESP32-S3-DevKitC-1</text>
+  <text x="529" y="170" text-anchor="middle" fill="#104281">N8R8 · RuView firmware</text>
+  <text x="529" y="190" text-anchor="middle" fill="#104281">INT8 encoder + LoRA adapter</text>
+  <rect x="424" y="205" width="40" height="22" rx="3" fill="#2a78d6"/>
+  <text x="444" y="220" text-anchor="middle" fill="#fcfcfb" font-size="11">USB-C</text>
+  <circle cx="600" cy="225" r="8" fill="#1baf7a"/>
+  <text x="586" y="229" text-anchor="end" fill="#104281" font-size="11">RGB LED (GPIO 48)</text>
+  <rect x="616" y="128" width="14" height="12" rx="2" fill="#0d366b"/>
+
+  <!-- antenna -->
+  <line x1="623" y1="128" x2="680" y2="80" stroke="#0d366b" stroke-width="2"/>
+  <rect x="676" y="58" width="12" height="40" rx="3" fill="#0d366b" transform="rotate(40 682 78)"/>
+  <text x="700" y="72" fill="#52514e">2.4 GHz antenna (u.FL)</text>
+
+  <!-- router -->
+  <rect x="700" y="270" width="140" height="70" rx="8" fill="#f0efec" stroke="#c3c2b7"/>
+  <text x="770" y="300" text-anchor="middle" font-weight="600" fill="#0b0b0b">WiFi / 4G MiFi</text>
+  <text x="770" y="320" text-anchor="middle" fill="#52514e">CSI source + uplink</text>
+
+  <!-- cables -->
+  <line x1="154" y1="185" x2="214" y2="185" stroke="#0b0b0b" stroke-width="2"/>
+  <text x="184" y="176" text-anchor="middle" fill="#52514e" font-size="11">USB</text>
+  <path d="M354 185 H390 V216 H424" fill="none" stroke="#0b0b0b" stroke-width="2"/>
+  <text x="372" y="176" text-anchor="middle" fill="#52514e" font-size="11">USB-C 5 V</text>
+
+  <!-- wireless -->
+  <path d="M640 255 Q700 250 720 270" fill="none" stroke="#eb6834" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="600" y="290" fill="#52514e">WiFi packets → CSI (100/s)</text>
+  <text x="600" y="308" fill="#52514e">MQTT events over TLS ↑</text>
+
+  <text x="24" y="300" fill="#0b0b0b" font-weight="600">Placement</text>
+  <text x="24" y="320" fill="#52514e">1.0–1.5 m high on the wall, facing the sleeping/living area,</text>
+  <text x="24" y="338" fill="#52514e">2–4 m from the router so the person moves through the link.</text>
+</svg>

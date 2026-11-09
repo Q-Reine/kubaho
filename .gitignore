@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.env
+*.db
+mlruns/
+data/processed/
+data/raw/
+node_modules/
+dashboard/dist/
+models/ruview_encoder_standin.pt
+models/kubaho_lora_fp32.onnx
+*.egg-info/

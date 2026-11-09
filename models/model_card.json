@@ -1,0 +1,68 @@
+{
+  "version": "kubaho-lora-r4-v0.1",
+  "created": "2026-11-10",
+  "classes": [
+    "fall",
+    "sit_lie_mat",
+    "kneel_pray",
+    "squat_stool",
+    "walk",
+    "bend_sweep",
+    "restless_bed",
+    "empty"
+  ],
+  "threshold": 0.3371,
+  "input": {
+    "raw_fs": 100,
+    "model_fs": 50,
+    "window_s": 2.0,
+    "subcarriers": 52,
+    "preprocessing": "interpolate lost packets, Hampel(5, 3\u03c3), Butterworth band-pass 0.2-20 Hz, decimate to 50 Hz"
+  },
+  "architecture": {
+    "encoder": "Conv1d stem + 4 transformer blocks (d=128, 4 heads), mean-pooled 128-d embedding",
+    "adapter": "LoRA r=4, alpha=8 on attention q and v",
+    "head": "Linear 128->8",
+    "encoder_params": 292160,
+    "lora_params": 4608
+  },
+  "evaluation": {
+    "protocol": "leave-one-layout-out with unseen subjects, mean of 2 folds",
+    "data": "SYNTHETIC Kubaho-Lab stand-in - preliminary, not validated on real CSI",
+    "M7": {
+      "accuracy": 0.4931,
+      "macro_precision": 0.4479,
+      "macro_recall": 0.4698,
+      "macro_f1": 0.4213,
+      "fall_precision": 0.768,
+      "fall_sensitivity": 0.8833,
+      "fall_f1": 0.8159,
+      "specificity_floor_level": 0.8028,
+      "specificity_all_non_fall": 0.8521,
+      "false_alarms": 13.0
+    },
+    "M0_threshold": {
+      "fall_precision": 0.4416,
+      "fall_sensitivity": 0.9875,
+      "fall_f1": 0.6102,
+      "specificity_floor_level": 0.2306,
+      "specificity_all_non_fall": 0.375,
+      "false_alarms": 62.0
+    }
+  },
+  "export": {
+    "FP32": {
+      "size_kb": 1181.2,
+      "cpu_latency_ms": 0.887
+    },
+    "INT8": {
+      "size_kb": 377.5,
+      "cpu_latency_ms": 1.471
+    }
+  },
+  "files": {
+    "onnx_int8": "kubaho_lora_int8.onnx",
+    "onnx_fp32": "kubaho_lora_fp32.onnx",
+    "adapter": "kubaho_lora_adapter/"
+  }
+}
